@@ -1,7 +1,29 @@
 import pg from "pg";
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Always resolve .env from project root, regardless of where `node` is launched.
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
+
+const requiredEnvVars = [
+  "POSTGRES_USER",
+  "POSTGRES_PASSWORD",
+  "POSTGRES_PORT",
+  "POSTGRES_HOST",
+  "POSTGRES_DB",
+];
+
+for (const key of requiredEnvVars) {
+  const value = process.env[key];
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+}
+
 const { Pool } = pg;
 export const pool = new Pool({
   user: process.env.POSTGRES_USER,

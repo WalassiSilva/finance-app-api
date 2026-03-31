@@ -1,1 +1,1 @@
-{ "*.js": ["npx eslint", "npx prettier --write"] }
+{ "*.js": ["npx prettier --write"] }
