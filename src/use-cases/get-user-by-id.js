@@ -3,7 +3,7 @@ import { PostgressGetUserByIdRepository } from "../repositories/postgres/get-use
 export class GetUserByIdUseCase {
   async execute(userId) {
     const getUserByIdRepository = new PostgressGetUserByIdRepository();
-    const user = await getUserByIdRepository(userId);
+    const user = await getUserByIdRepository.execute(userId);
     return user;
   }
 }

@@ -17,3 +17,7 @@ export const serverError = () => {
     body: { message: "Internal server error." },
   };
 };
+
+export const ok = (body) => {
+  return { statusCode: 200, body };
+};
