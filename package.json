@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrations": "node src/db/postgres/migrations/exec.js",
-    "postinstall": "npx husky intall"
+    "postinstall": "npx husky intall",
+    "dev:start": "node --watch index.js "
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "express": "^5.2.1",
     "globals": "^17.4.0",
     "pg": "^8.11.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "validator": "^13.11.0"
   }
 }
