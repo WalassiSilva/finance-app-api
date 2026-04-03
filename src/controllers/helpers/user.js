@@ -13,3 +13,5 @@ export const invalidIdResponse = () =>
 export const validatePassword = (password) => password.length >= 6;
 
 export const validateEmail = (email) => validator.isEmail(email);
+
+export const validateId = (id) => validator.isUUID(id);
