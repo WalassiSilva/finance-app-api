@@ -50,6 +50,10 @@ export class UpdateUserController {
 
       const updateUser = await this.updateUserUseCase.execute(userId, params);
 
+      if (!updateUser) {
+        return invalidIdResponse();
+      }
+
       return ok(updateUser);
     } catch (error) {
       if (error instanceof EmailAlreadyInUseError) {
