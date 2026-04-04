@@ -1,4 +1,4 @@
-import { PostgresHelper } from "../../db/postgres/helper.js";
+import { PostgresHelper } from "../../../db/postgres/helper.js";
 export class PostgresGetUserByImail {
   async execute(email) {
     const user = await PostgresHelper.query(
