@@ -14,21 +14,14 @@ export class CreateTransactionController {
   async execute(httpRequest) {
     try {
       const params = httpRequest.body;
-      const requiredFields = [
-        "id",
-        "user_id",
-        "name",
-        "amount",
-        "date",
-        "type",
-      ];
+      const requiredFields = ["user_id", "name", "amount", "date", "type"];
       for (const field of requiredFields) {
-        if (!params[field] || params[field].trim().length === 0) {
+        if (!params[field] || params[field].toString().trim().length === 0) {
           return badRequest({ message: `Missing param: ${field}` });
         }
       }
 
-      const isUserIdValid = validateId(params.userId);
+      const isUserIdValid = validateId(params.user_id);
       if (!isUserIdValid) {
         return invalidIdResponse();
       }
@@ -38,7 +31,7 @@ export class CreateTransactionController {
           message: "The amount must be greatter than 0.",
         });
       }
-      const isAmountValid = validator.isCurrency({
+      const isAmountValid = validator.isCurrency(params.amount.toString(), {
         digits_after_decimal: [2],
         allow_negatives: false,
         decimal_separator: ".",
