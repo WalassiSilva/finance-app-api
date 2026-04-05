@@ -3,10 +3,17 @@ import {
   badRequest,
   created,
   invalidIdResponse,
+  requiredFieldIsMissingResponse,
   serverError,
   validateId,
   validateRequiredFields,
 } from "../helpers/index.js";
+import {
+  invalidAmountResponse,
+  invalidTypeResponse,
+  validateAmount,
+  validateType,
+} from "../helpers/transaction.js";
 
 export class CreateTransactionController {
   constructor(createTransactionUseCase) {
@@ -23,7 +30,7 @@ export class CreateTransactionController {
       );
 
       if (!validationSuccess) {
-        return badRequest({ message: `The field ${missingField} is missing` });
+        return requiredFieldIsMissingResponse(missingField);
       }
 
       const isUserIdValid = validateId(params.user_id);
@@ -31,24 +38,16 @@ export class CreateTransactionController {
         return invalidIdResponse();
       }
 
-      if (params.amount <= 0) {
-        return badRequest({
-          message: "The amount must be greatter than 0.",
-        });
-      }
-      const isAmountValid = validator.isCurrency(params.amount.toString(), {
-        digits_after_decimal: [2],
-        allow_negatives: false,
-        decimal_separator: ".",
-      });
+      const isAmountValid = validateAmount(params.amount);
       if (!isAmountValid) {
-        return badRequest({ message: "The amount must be a valid currency." });
+        return invalidAmountResponse();
       }
 
       const type = params.type.trim().toUpperCase();
-      const isTypeValid = ["INCOME", "EXPENSE", "INVESTMENT"].includes(type);
+      const isTypeValid = validateType(type);
+
       if (!isTypeValid) {
-        badRequest({ message: "The must be INCOME, EXPENSE or INVESTMENT." });
+        return invalidTypeResponse();
       }
       const transaction = await this.createTransactionUseCase.execute({
         ...params,

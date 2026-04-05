@@ -8,6 +8,7 @@ import {
   serverError,
   validatePassword,
   validateRequiredFields,
+  requiredFieldIsMissingResponse,
 } from "../helpers/index.js";
 
 export class CreateUserController {
@@ -27,9 +28,7 @@ export class CreateUserController {
       );
 
       if (!validationSuccess) {
-        return badRequest({
-          message: `The missing ${missingField} is required.`,
-        });
+        return requiredFieldIsMissingResponse(missingField);
       }
 
       // validar senha
