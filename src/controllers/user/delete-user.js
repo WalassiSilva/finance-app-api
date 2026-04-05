@@ -4,7 +4,7 @@ import {
   serverError,
   invalidIdResponse,
   invalidUserResponse,
-} from "./helpers/index.js";
+} from "../helpers/index.js";
 export class DeleteUserController {
   constructor(deleteUserUseCase) {
     this.deleteUserUseCase = deleteUserUseCase;
