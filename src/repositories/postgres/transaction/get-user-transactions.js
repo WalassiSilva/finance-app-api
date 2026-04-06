@@ -1,4 +1,4 @@
-export class PostgresGetTransactionsByUserId {
+export class PostgresGetUserTransactionsRepository {
   async execute(userId) {
     const transaction = await PostgresHelper.query(
       `
