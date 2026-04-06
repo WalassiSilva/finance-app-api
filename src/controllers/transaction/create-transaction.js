@@ -1,6 +1,4 @@
-import validator from "validator";
 import {
-  badRequest,
   created,
   invalidIdResponse,
   requiredFieldIsMissingResponse,
