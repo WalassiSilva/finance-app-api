@@ -1,5 +1,10 @@
-import { badRequest, invalidIdResponse, ok, validateId } from "../helpers";
-import { serverError } from "../helpers.js";
+import {
+  invalidIdResponse,
+  ok,
+  validateId,
+  serverError,
+  invalidTransactionResponse,
+} from "../helpers/index.js";
 
 export class DeleteTransactionController {
   constructor(deleteTransactionUseCase) {
@@ -16,6 +21,9 @@ export class DeleteTransactionController {
         httpRequest.params.transactionId,
       );
 
+      if (!transaction) {
+        return invalidTransactionResponse();
+      }
       return ok(transaction);
     } catch (error) {
       console.error(error);
