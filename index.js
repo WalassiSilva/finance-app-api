@@ -4,6 +4,7 @@ import { PostgresHelper } from "./src/db/postgres/helper.js";
 import {
   makeCreateUserController,
   makeDeleteUserController,
+  makeGetUserBalanceController,
   makeGetUserByIdController,
   makeUpdateUserController,
 } from "./src/factories/controllers/user.js";
@@ -20,6 +21,13 @@ app.use(express.json());
 app.get("/", async (_, res) => {
   const results = await PostgresHelper.query("SELECT * FROM users;");
   res.send(JSON.stringify(results));
+});
+
+app.get("/api/users/:userId/balance", async (request, response) => {
+  const getUserBalanceController = makeGetUserBalanceController();
+  const { statusCode, body } = await getUserBalanceController.execute(request);
+
+  response.status(statusCode).send(body);
 });
 
 app.get("/api/users/:userId", async (request, response) => {
