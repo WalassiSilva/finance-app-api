@@ -3,6 +3,7 @@ export * from "./user/get-user-by-id.js";
 export * from "./user/get-user-email.js";
 export * from "./user/update-user.js";
 export * from "./user/delete-user.js";
+export * from "./user/get-user-balance.js";
 
 export * from "./transaction/create-transaction.js";
 export * from "./transaction/get-user-transactions.js";
