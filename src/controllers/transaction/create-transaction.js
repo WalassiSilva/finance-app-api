@@ -1,17 +1,6 @@
-import {
-  created,
-  invalidIdResponse,
-  requiredFieldIsMissingResponse,
-  serverError,
-  validateId,
-  validateRequiredFields,
-} from "../helpers/index.js";
-import {
-  invalidAmountResponse,
-  invalidTypeResponse,
-  validateAmount,
-  validateType,
-} from "../helpers/transaction.js";
+import { ZodError } from "zod";
+import { createTransactionSchema } from "../../schemas/index.js";
+import { badRequest, created, serverError } from "../helpers/index.js";
 
 export class CreateTransactionController {
   constructor(createTransactionUseCase) {
@@ -20,39 +9,15 @@ export class CreateTransactionController {
   async execute(httpRequest) {
     try {
       const params = httpRequest.body;
-      const requiredFields = ["user_id", "name", "amount", "date", "type"];
 
-      const { missingField, validationSuccess } = validateRequiredFields(
-        params,
-        requiredFields,
-      );
+      await createTransactionSchema.parseAsync(params);
 
-      if (!validationSuccess) {
-        return requiredFieldIsMissingResponse(missingField);
-      }
-
-      const isUserIdValid = validateId(params.user_id);
-      if (!isUserIdValid) {
-        return invalidIdResponse();
-      }
-
-      const isAmountValid = validateAmount(params.amount);
-      if (!isAmountValid) {
-        return invalidAmountResponse();
-      }
-
-      const type = params.type.trim().toUpperCase();
-      const isTypeValid = validateType(type);
-
-      if (!isTypeValid) {
-        return invalidTypeResponse();
-      }
-      const transaction = await this.createTransactionUseCase.execute({
-        ...params,
-        type,
-      });
+      const transaction = await this.createTransactionUseCase.execute(params);
       return created(transaction);
     } catch (error) {
+      if (error instanceof ZodError) {
+        return badRequest({ message: error.errors[0].message });
+      }
       console.error(error);
       return serverError();
     }
