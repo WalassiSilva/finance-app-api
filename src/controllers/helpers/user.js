@@ -1,5 +1,4 @@
 import { badRequest, notFound } from "./index.js";
-import validator from "validator";
 
 export const invalidPasswordResponse = () =>
   badRequest({ message: "Password must have at least 6 characters." });
@@ -9,7 +8,3 @@ export const invalidEmailResponse = () =>
 
 export const invalidUserResponse = () =>
   notFound({ message: "User not found." });
-
-export const validatePassword = (password) => password.length >= 6;
-
-export const validateEmail = (email) => validator.isEmail(email);
