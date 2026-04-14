@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "postinstall": "npx husky intall && npx prisma generate",
     "dev:start": "node --watch index.js "
   },
@@ -15,6 +16,7 @@
   "devDependencies": {
     "git-commit-msg-linter": "^5.0.4",
     "husky": "^8.0.3",
+    "jest": "^30.3.0",
     "lint-staged": "^13.2.3",
     "prisma": "^5.7.0"
   },
