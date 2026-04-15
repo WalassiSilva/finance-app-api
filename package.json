@@ -21,6 +21,7 @@
     "husky": "^8.0.3",
     "jest": "^30.3.0",
     "lint-staged": "^13.2.3",
+    "@jest/types": "^30.3.0",
     "prisma": "^5.7.0"
   },
   "dependencies": {
