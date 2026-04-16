@@ -1,4 +1,5 @@
 import { CreateUserController } from "./create-user";
+import { faker } from "@faker-js/faker";
 describe("Create user Controller", () => {
   class CreateUserUseCaseStub {
     execute(user) {
@@ -13,10 +14,10 @@ describe("Create user Controller", () => {
 
     const httpRequest = {
       body: {
-        first_name: "Walassi",
-        last_name: "Silva",
-        email: "ws@email.com",
-        password: "asd341df",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
       },
     };
     //act
@@ -24,7 +25,7 @@ describe("Create user Controller", () => {
 
     //assert
     expect(result.statusCode).toBe(201);
-    expect(result.body).toBe(httpRequest.body);
+    expect(result.body).toEqual(httpRequest.body);
   });
 
   it("Should return status code 400 when firts_name is not provided", async () => {
@@ -33,9 +34,9 @@ describe("Create user Controller", () => {
     const createUserController = new CreateUserController(createUserUseCase);
     const httpRequest = {
       body: {
-        last_name: "Silva",
-        email: "ws@email.com",
-        password: "asd341df",
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
       },
     };
     //act
@@ -50,9 +51,9 @@ describe("Create user Controller", () => {
     const createUserController = new CreateUserController(createUserUseCase);
     const httpRequest = {
       body: {
-        first_name: "Walassi",
-        last_name: "Silva",
-        password: "asd341df",
+        first_name: faker.person.firstName(),
+        last_name: faker.internet.email(),
+        password: faker.internet.password(),
       },
     };
     //act
@@ -68,10 +69,10 @@ describe("Create user Controller", () => {
     const createUserController = new CreateUserController(createUserUseCase);
     const httpRequest = {
       body: {
-        first_name: "Walassi",
-        last_name: "Silva",
-        email: "wa",
-        password: "asd341df",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: "invalid_email",
+        password: faker.internet.password(),
       },
     };
     //act
@@ -87,9 +88,9 @@ describe("Create user Controller", () => {
     const createUserController = new CreateUserController(createUserUseCase);
     const httpRequest = {
       body: {
-        first_name: "Walassi",
-        last_name: "Silva",
-        email: "ws@email.com",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
       },
     };
     //act
@@ -98,15 +99,16 @@ describe("Create user Controller", () => {
 
     expect(result.statusCode).toBe(400);
   });
+
   it("Should return status code 400 when password has less than 6 chars", async () => {
     //arrange
     const createUserUseCase = new CreateUserUseCaseStub();
     const createUserController = new CreateUserController(createUserUseCase);
     const httpRequest = {
       body: {
-        first_name: "Walassi",
-        last_name: "Silva",
-        email: "ws@email.com",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
         password: "asd",
       },
     };
@@ -115,5 +117,25 @@ describe("Create user Controller", () => {
     //assert
 
     expect(result.statusCode).toBe(400);
+  });
+
+  it("Should call createUserUseCase with correct params", async () => {
+    //arrange
+    const createUserUseCase = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(createUserUseCase);
+    const httpRequest = {
+      body: {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
+    };
+    //act
+    const executeSpy = jest.spyOn(createUserUseCase, "execute");
+    await createUserController.execute(httpRequest);
+    //assert
+
+    expect(executeSpy).toHaveBeenCalledWith(httpRequest.body);
   });
 });
