@@ -1,3 +1,4 @@
+import { EmailAlreadyInUseError } from "../../errors/user.js";
 import { UpdateUserController } from "./update-user.js";
 import { faker } from "@faker-js/faker";
 describe("UpdateUserController", () => {
@@ -30,5 +31,76 @@ describe("UpdateUserController", () => {
 
     //assert
     expect(result.statusCode).toBe(200);
+  });
+
+  it("Should return 400 when e-mail is invalid", async () => {
+    //arrange
+    const { sut } = makeSut();
+    //act
+    const result = await sut.execute({
+      ...httpRequest,
+      body: { email: "Invalid_email" },
+    });
+    //assert
+    expect(result.statusCode).toBe(400);
+  });
+  it("Should return 400 when password is invalid", async () => {
+    //arrange
+    const { sut } = makeSut();
+    //act
+    const result = await sut.execute({
+      ...httpRequest,
+      body: { password: faker.internet.password({ length: 5 }) },
+    });
+    //assert
+    expect(result.statusCode).toBe(400);
+  });
+
+  it("Should return 400 when userId is invalid", async () => {
+    //arrange
+    const { sut } = makeSut();
+    //act
+    const result = await sut.execute({
+      ...httpRequest,
+      params: { userId: "invalid_id" },
+    });
+    //assert
+    expect(result.statusCode).toBe(400);
+  });
+
+  it("Should return 400 when unallowed field is provided", async () => {
+    //arrange
+    const { sut } = makeSut();
+    //act
+    const result = await sut.execute({
+      ...httpRequest,
+      body: { unallowed_field: "unallowed_field" },
+    });
+    //assert
+    expect(result.statusCode).toBe(400);
+  });
+
+  it("Should return 500 when throw a generic error", async () => {
+    //arrange
+    const { sut, updateUserUseCase } = makeSut();
+    jest.spyOn(updateUserUseCase, "execute").mockRejectedValueOnce(new Error());
+    //act
+    const result = await sut.execute(httpRequest);
+    //assert
+    expect(result.statusCode).toBe(500);
+  });
+
+  it("Should return 400 when throw EmailAlreadyInUse error", async () => {
+    //arrange
+    const { sut, updateUserUseCase } = makeSut();
+    jest
+      .spyOn(updateUserUseCase, "execute")
+      .mockRejectedValueOnce(
+        new EmailAlreadyInUseError(faker.internet.email()),
+      );
+    //act
+    const result = await sut.execute(httpRequest);
+    //assert
+    expect(result.statusCode).toBe(400);
   });
 });
