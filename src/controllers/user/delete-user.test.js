@@ -4,7 +4,7 @@ import { makeStrictEnum } from "@prisma/client/runtime/library.js";
 
 describe("DeleteUserController", () => {
   class DeleteUserUseCaseStub {
-    execute() {
+    async execute() {
       return {
         id: faker.string.uuid(),
         first_name: faker.person.firstName(),
@@ -44,17 +44,17 @@ describe("DeleteUserController", () => {
     expect(result.statusCode).toBe(400);
   });
 
-  it("Should return 404if user is not found", async () => {
+  it("Should return 404 if user is not found", async () => {
     const { sut, deleteuserUseCase } = makeSut();
-    jest.spyOn(deleteuserUseCase, "execute").mockReturnValueOnce(null);
+    jest.spyOn(deleteuserUseCase, "execute").mockResolvedValue(null);
     const result = await sut.execute(httpRequest);
     expect(result.statusCode).toBe(404);
   });
 
   it("Should return 500 if DeletedUserUseCase throws", async () => {
     const { sut, deleteuserUseCase } = makeSut();
-    jest.spyOn(deleteuserUseCase, "execute").mockImplementationOnce(() => {
-      throw new Error();
+    jest.spyOn(deleteuserUseCase, "execute").mockRejectedValue(() => {
+      new Error();
     });
     const result = await sut.execute(httpRequest);
     expect(result.statusCode).toBe(500);
