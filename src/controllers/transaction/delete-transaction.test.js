@@ -54,4 +54,11 @@ describe("DeleteTransaction", () => {
     });
     expect(result.statusCode).toBe(500);
   });
+  it("Should call DeleteTransactionUseCase with correct params", async () => {
+    const { sut, deleteTransactionUseCase } = makeSut();
+    const executeSpy = jest.spyOn(deleteTransactionUseCase, "execute");
+    const transactionId = faker.string.uuid();
+    await sut.execute({ params: { transactionId } });
+    expect(executeSpy).toHaveBeenCalledWith(transactionId);
+  });
 });
