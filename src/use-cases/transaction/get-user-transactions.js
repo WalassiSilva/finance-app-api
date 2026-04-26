@@ -4,16 +4,15 @@ export class GetUserTransactionsUseCase {
     this.getUserIdRepository = getUserIdRepository;
     this.getUserTransactionsRepository = getUserTransactionsRepository;
   }
-  async execute(params) {
-    const user = await this.getUserIdRepository.execute(params.userId);
+  async execute(userId) {
+    const user = await this.getUserIdRepository.execute(userId);
 
     if (!user) {
-      throw new UserNotFoundError(params.userId);
+      throw new UserNotFoundError(userId);
     }
 
-    const transactions = await this.getUserTransactionsRepository.execute(
-      params.userId,
-    );
+    const transactions =
+      await this.getUserTransactionsRepository.execute(userId);
 
     return transactions;
   }
