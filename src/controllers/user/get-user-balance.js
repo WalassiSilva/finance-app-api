@@ -27,7 +27,7 @@ export class GetUserBalanceController {
         return invalidUserResponse();
       }
       console.error(error);
-      serverError();
+      return serverError();
     }
   }
 }
