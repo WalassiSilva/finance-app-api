@@ -9,24 +9,3 @@ export const invalidIdResponse = () =>
 export const requiredFieldIsMissingResponse = (field) => {
   badRequest({ message: `The field ${field} is required.` });
 };
-
-export const isString = (value) => typeof value === "string";
-
-export const validateRequiredFields = (params, requiredFields) => {
-  for (const field of requiredFields) {
-    const isFieldMissing = !params[field];
-    const isFieldEmpty =
-      isString(params[field]) &&
-      validator.isEmpty(params[field], { ignore_whitespace: true });
-    if (isFieldMissing || isFieldEmpty) {
-      return {
-        missingField: field,
-        validationSuccess: false,
-      };
-    }
-  }
-  return {
-    missingField: undefined,
-    validationSuccess: true,
-  };
-};
