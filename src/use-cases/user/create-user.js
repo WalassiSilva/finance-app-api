@@ -3,9 +3,14 @@ import bcrypt from "bcrypt";
 import { EmailAlreadyInUseError } from "../../errors/user.js";
 
 export class CreateUserUseCase {
-  constructor(getUserByEmail, postgresCreateUserRepository) {
+  constructor(
+    getUserByEmail,
+    postgresCreateUserRepository,
+    passwordHasherAdapter,
+  ) {
     this.postgresCreateUserRepository = postgresCreateUserRepository;
     this.getUserByEmail = getUserByEmail;
+    this.passwordHasherAdapter = passwordHasherAdapter;
   }
   async execute(createUserParams) {
     const userEmailExists = await this.getUserByEmail.execute(
@@ -19,7 +24,10 @@ export class CreateUserUseCase {
     const userId = uuidv4();
 
     // criptografar a senha
-    const hashedPassword = await bcrypt.hash(createUserParams.password, 10);
+    const hashedPassword = await this.passwordHasherAdapter.execute(
+      createUserParams.password,
+      10,
+    );
 
     // inserir user no banco
     const user = {
