@@ -26,7 +26,6 @@ export class CreateUserUseCase {
     // criptografar a senha
     const hashedPassword = await this.passwordHasherAdapter.execute(
       createUserParams.password,
-      10,
     );
 
     // inserir user no banco
