@@ -141,7 +141,7 @@ describe("Create User Use Case", () => {
     //assert
     await expect(promise).rejects.toThrow();
   });
-  it("Should thow if CreateUserRepository throws", async () => {
+  it("Should throws if CreateUserRepository throws", async () => {
     //arrange
     const { sut, createUserRepository } = makeSut();
     jest
